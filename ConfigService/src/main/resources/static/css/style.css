@@ -1,0 +1,10 @@
+.box-risultato {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-left: 5px solid #007bff;
+    border-radius: 4px;
+    font-family: monospace;
+    white-space: pre-wrap; /* Mantiene la formattazione dell'XML */
+}
