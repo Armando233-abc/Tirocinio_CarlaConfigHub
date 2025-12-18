@@ -1,23 +1,33 @@
-function inviaRichiestaGenerazione() {
-    let btn = document.getElementById("btnGenera");
-    let resultBox = document.getElementById("risultatoContainer");
-    let resultText = document.getElementById("risultatoTesto");
-    // 2. Chiamata AJAX
-    fetch('/Home/genera', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'text/plain'
+document.getElementById("configForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const payload = {
+        weather: {
+            rain: document.getElementById("rain").value,
+            cloudiness: document.getElementById("cloudiness").value
         },
-        body: resultBox
-    })
-        .then(response => response.text())
-        .then(data => {
-            resultText.innerText = data;
-            resultBox.style.display = "block";
-        })
-        .catch(error => alert("Errore: " + error))
-        .finally(() => {
-            btn.disabled = false;
-            btn.innerText = "Avvia Generazione XML";
+        vehicle: {
+            model: document.getElementById("model").value,
+            speed: document.getElementById("speed").value
+        },
+        scenario: {
+            map: document.getElementById("map").value,
+            duration: document.getElementById("duration").value
+        }
+    };
+
+    try {
+        const response = await fetch("/config/generate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
         });
-}
+
+        const text = await response.text();
+        document.getElementById("output").textContent = text;
+
+    } catch (error) {
+        document.getElementById("output").textContent =
+            "Errore nella comunicazione con il Config Service";
+    }
+});

@@ -1,24 +1,57 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarlaConfigHub</title>
     <script th:src="@{/js/script.js}" defer></script>
     <link rel="stylesheet" th:href="@{/css/style.css}"></link>
-    <title>Document</title>
 </head>
 <body>
-    <h1>CarlaConfigHub</h1>
-    <h5>Una applicazione che ti permette di creare file di configurazione per il simulatore CARLA</h5>
-    <p>Stato attuale: <span th:text="${statoHtml}">Sconosciuto</span></p>
 
-    <button type="button" id="btnGenera" onclick="inviaRichiestaGenerazione()">
-        Avvia Generazione XML
-    </button>
+<h1>CarlaConfigHub</h1>
 
-    <div id="risultatoContainer" style="display: none;">
-        <h3>Risultato dal Gateway:</h3>
-        <div id="risultatoTesto" class="box-risultato"></div>
-    </div>
+<form id="configForm">
+
+    <fieldset>
+        <legend>Weather</legend>
+        <label>
+            Rain:
+            <input type="number" id="rain" min="0" max="100">
+        </label>
+        <label>
+            Cloudiness:
+            <input type="number" id="cloudiness" min="0" max="100">
+        </label>
+    </fieldset>
+
+    <fieldset>
+        <legend>Vehicle</legend>
+        <label>
+            Model:
+            <input type="text" id="model">
+        </label>
+        <label>
+            Max Speed:
+            <input type="number" id="speed">
+        </label>
+    </fieldset>
+
+    <fieldset>
+        <legend>Scenario</legend>
+        <label>
+            Map:
+            <input type="text" id="map">
+        </label>
+        <label>
+            Duration (sec):
+            <input type="number" id="duration">
+        </label>
+    </fieldset>
+
+    <button type="submit">Generate XML</button>
+</form>
+
+<h2>Output XML</h2>
+<pre id="output"></pre>
 </body>
 </html>

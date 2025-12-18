@@ -1,10 +1,58 @@
-.box-risultato {
-    margin-top: 20px;
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f8;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+form {
+    max-width: 600px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+fieldset {
+    margin-bottom: 15px;
+    border-radius: 6px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+}
+
+input {
+    width: 100%;
+    padding: 6px;
+    margin-top: 4px;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #1976d2;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #125aa0;
+}
+
+pre {
+    max-width: 600px;
+    margin: 20px auto;
+    background: #222;
+    color: #0f0;
     padding: 15px;
-    background-color: #f8f9fa;
-    border: 1px solid #ddd;
-    border-left: 5px solid #007bff;
-    border-radius: 4px;
-    font-family: monospace;
-    white-space: pre-wrap; /* Mantiene la formattazione dell'XML */
+    overflow-x: auto;
+    border-radius: 6px;
 }
