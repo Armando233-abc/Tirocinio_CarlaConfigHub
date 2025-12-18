@@ -2,56 +2,95 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <title>CarlaConfigHub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarlaConfigHub - Generatore</title>
     <script th:src="@{/js/script.js}" defer></script>
     <link rel="stylesheet" th:href="@{/css/style.css}"></link>
 </head>
 <body>
+<div class="container">
+    <header>
+        <h1>CarlaConfigHub</h1>
+        <p>Generatore di configurazioni XML per simulatore CARLA</p>
+    </header>
 
-<h1>CarlaConfigHub</h1>
+    <form id="configForm">
+        <fieldset>
+            <legend>🌦️ Parametri Meteo</legend>
+            <div class="form-group">
+                <label for="cloudiness">Nuvolosità (0-100%):</label>
+                <input type="number" id="cloudiness" name="cloudiness" min="0" max="100" value="0">
+            </div>
+            <div class="form-group">
+                <label for="precipitation">Precipitazioni (0-100%):</label>
+                <input type="number" id="precipitation" name="precipitation" min="0" max="100" value="0">
+            </div>
+            <div class="form-group">
+                <label for="windIntensity">Intensità Vento (0-100%):</label>
+                <input type="number" id="windIntensity" name="windIntensity" min="0" max="100" value="0">
+            </div>
+            <div class="form-group">
+                <label for="sunAltitude">Angolo Sole (-90 a 90):</label>
+                <input type="number" id="sunAltitude" name="sunAltitude" value="45">
+            </div>
+        </fieldset>
 
-<form id="configForm">
+        <fieldset>
+            <legend>🚗 Parametri Veicolo</legend>
+            <div class="form-group">
+                <label for="vehicleModel">Modello:</label>
+                <select id="vehicleModel">
+                    <option value="vehicle.tesla.model3">Tesla Model 3</option>
+                    <option value="vehicle.audi.etron">Audi e-tron</option>
+                    <option value="vehicle.nissan.patrol">Nissan Patrol</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="vehicleColor">Colore (RGB):</label>
+                <input type="color" id="vehicleColor" value="#ff0000">
+            </div>
+            <div class="form-group">
+                <label for="autopilot">Autopilot Attivo:</label>
+                <select id="autopilot">
+                    <option value="true">Sì</option>
+                    <option value="false">No</option>
+                </select>
+            </div>
+        </fieldset>
 
-    <fieldset>
-        <legend>Weather</legend>
-        <label>
-            Rain:
-            <input type="number" id="rain" min="0" max="100">
-        </label>
-        <label>
-            Cloudiness:
-            <input type="number" id="cloudiness" min="0" max="100">
-        </label>
-    </fieldset>
+        <fieldset>
+            <legend>🏙️ Parametri Scenario</legend>
+            <div class="form-group">
+                <label for="town">Mappa:</label>
+                <select id="town">
+                    <option value="Town01">Town01</option>
+                    <option value="Town02">Town02</option>
+                    <option value="Town03">Town03</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="pedestrians">Numero Pedoni:</label>
+                <input type="number" id="pedestrians" min="0" value="10">
+            </div>
+            <div class="form-group">
+                <label for="trafficDensity">Densità Traffico (0-100%):</label>
+                <input type="number" id="trafficDensity" min="0" max="100" value="30">
+            </div>
+        </fieldset>
 
-    <fieldset>
-        <legend>Vehicle</legend>
-        <label>
-            Model:
-            <input type="text" id="model">
-        </label>
-        <label>
-            Max Speed:
-            <input type="number" id="speed">
-        </label>
-    </fieldset>
+        <button type="submit" id="generateBtn">Genera XML Configurazione</button>
+    </form>
 
-    <fieldset>
-        <legend>Scenario</legend>
-        <label>
-            Map:
-            <input type="text" id="map">
-        </label>
-        <label>
-            Duration (sec):
-            <input type="number" id="duration">
-        </label>
-    </fieldset>
+    <div id="resultArea" class="hidden">
+        <h3>Risultato XML:</h3>
+        <textarea id="xmlOutput" readonly></textarea>
+        <button id="downloadBtn">Scarica File .xml</button>
+    </div>
 
-    <button type="submit">Generate XML</button>
-</form>
+    <div id="errorArea" class="hidden">
+        <p id="errorMessage"></p>
+    </div>
+</div>
 
-<h2>Output XML</h2>
-<pre id="output"></pre>
 </body>
 </html>
