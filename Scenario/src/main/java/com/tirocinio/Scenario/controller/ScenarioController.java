@@ -1,5 +1,8 @@
 package com.tirocinio.Scenario.controller;
 import com.tirocinio.Scenario.service.ScenarioService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +20,15 @@ public class ScenarioController {
         this.scenarioService = scenarioService;
     }
 
+    @Operation(
+            summary = "Definizione Scenario di Simulazione",
+            description = "Configura l'ambiente generale della simulazione, selezionando la Mappa e impostando il tempo di simulazione."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Configurazione scenario XML generata"),
+            @ApiResponse(responseCode = "400", description = "Parametri scenario o mappa non validi. Nessun XML generato."),
+            @ApiResponse(responseCode = "500", description = "Errore interno standardizzato notificato al Gateway Service.")
+    })
     @PostMapping("/generate")
     public ResponseEntity<?> generateScenario(@RequestBody Map<String, Object> request) {
         try {
