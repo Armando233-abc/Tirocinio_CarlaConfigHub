@@ -16,7 +16,7 @@ public class OpenApiConfig {
         return new OpenAPI()
                 .info(new Info()
                         .title("Vehicle Service API")
-                        .description("Microservizio per la configurazione dei veicoli (Modello, Colore RGB, Autopilot).")
+                        .description("Microservizio per la configurazione dei veicoli.")
                         .version("1.0.0"));
     }
 }
