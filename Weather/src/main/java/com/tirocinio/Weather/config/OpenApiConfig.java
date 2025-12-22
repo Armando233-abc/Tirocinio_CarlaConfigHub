@@ -15,7 +15,7 @@ public class OpenApiConfig {
         return new OpenAPI()
                 .info(new Info()
                         .title("Weather Service API")
-                        .description("Microservizio per la gestione e validazione dei parametri meteorologici (Nuvole, Pioggia, Vento, Sole).")
+                        .description("Microservizio per la gestione e validazione dei parametri meteorologici.")
                         .version("1.0.0"));
     }
 }
