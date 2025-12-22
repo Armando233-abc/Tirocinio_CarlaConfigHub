@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  # --- Config Service (Interfaccia) ---
+  config-service:
+    build: ./ConfigService  # Il nome esatto della tua cartella
+    container_name: carla-config-service
+    ports:
+      - "8081:8080"
+    environment:
+      - GATEWAY_URL=http://gateway-service:8080/api/gateway
+    networks:
+      - carla-network
+    depends_on:
+      - gateway-service
+
+  # --- Gateway Service (Orchestratore) ---
+  gateway-service:
+    build: ./GatewayService # Il nome esatto della tua cartella
+    container_name: carla-gateway-service
+    ports:
+      - "8080:8080"
+    environment:
+        - WEATHER_SERVICE_URL=http://weather-service:8080/api/weather
+        - VEHICLE_SERVICE_URL=http://vehicle-service:8080/api/vehicle
+        - SCENARIO_SERVICE_URL=http://scenario-service:8080/api/scenario
+        - COMPOSER_SERVICE_URL=http://composer-service:8080/api/composer
+    networks:
+      - carla-network
+    depends_on:
+      - weather-service
+      - vehicle-service
+      - scenario-service
+      - composer-service
+
+
+  weather-service:
+    build: ./Weather
+    container_name: carla-weather-service
+    networks:
+      - carla-network
+
+  vehicle-service:
+    build: ./Vehicle
+    container_name: carla-vehicle-service
+    networks:
+      - carla-network
+
+  scenario-service:
+    build: ./Scenario
+    container_name: carla-scenario-service
+    networks:
+      - carla-network
+
+  composer-service:
+    build: ./Composer
+    container_name: carla-composer-service
+    networks:
+      - carla-network
+
+networks:
+  carla-network:
+    driver: bridge
