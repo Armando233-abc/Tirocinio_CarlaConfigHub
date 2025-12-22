@@ -15,7 +15,7 @@ public class OpenApiConfig {
         return new OpenAPI()
                 .info(new Info()
                         .title("Config Service API")
-                        .description("Microservizio Core per la gestione della simulazione. Consente di definire e strutturare i parametri principali (Ambiente, Veicoli, Scenario) e garantisce che il file di configurazione risultante rispetti gli schemi e le regole di formato del sistema.")
+                        .description("Microservizio Core per la gestione della simulazione. Consente di definire e strutturare i parametri principali (Ambiente, Veicoli, Scenario)")
                         .version("1.0.0"));
     }
 }
