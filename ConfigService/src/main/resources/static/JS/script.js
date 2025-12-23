@@ -29,7 +29,7 @@ document.getElementById('configForm').addEventListener('submit', async function(
     try {
         // 2. Chiamata al Gateway Service
         // Assicurati che il Gateway sia attivo su localhost:8080
-        const response = await fetch('http://localhost:8080/api/gateway/generate', {
+        const response = await fetch('http://gateway-service:8080/api/gateway/generate', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
