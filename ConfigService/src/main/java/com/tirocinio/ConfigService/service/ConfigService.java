@@ -15,7 +15,7 @@ public class ConfigService {
     }
 
     public String inviaDatiAlGateway() {
-        String urlGateway = "http://localhost:8080/api/gateway/dispatch";
+        String urlGateway = "http://localhost:8080/api/gateway";
 
         try {
             // Nota: passiamo 'null' o una stringa vuota perché al contatore non serve input
