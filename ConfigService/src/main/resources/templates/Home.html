@@ -3,93 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CarlaConfigHub - Generatore</title>
+    <title>Carla Configurator</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <script th:src="@{/JS/script.js}" defer></script>
-    <link rel="stylesheet" th:href="@{/css/style.css}"></link>
 </head>
 <body>
-<div class="container">
-    <header>
-        <h1>CarlaConfigHub</h1>
-        <p>Generatore di configurazioni XML per simulatore CARLA</p>
-    </header>
 
-    <form id="configForm">
-        <fieldset>
-            <legend>🌦️ Parametri Meteo</legend>
-            <div class="form-group">
-                <label for="cloudiness">Nuvolosità (0-100%):</label>
-                <input type="number" id="cloudiness" name="cloudiness" min="0" max="100" value="0">
-            </div>
-            <div class="form-group">
-                <label for="precipitation">Precipitazioni (0-100%):</label>
-                <input type="number" id="precipitation" name="precipitation" min="0" max="100" value="0">
-            </div>
-            <div class="form-group">
-                <label for="windIntensity">Intensità Vento (0-100%):</label>
-                <input type="number" id="windIntensity" name="windIntensity" min="0" max="100" value="0">
-            </div>
-            <div class="form-group">
-                <label for="sunAltitude">Angolo Sole (-90 a 90):</label>
-                <input type="number" id="sunAltitude" name="sunAltitude" value="45">
-            </div>
-        </fieldset>
+<div class="app-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="brand">
+            <h1>CARLA<span>HUB</span></h1>
+            <p>Configuratore Scenari XML per Simulazione</p>
+        </div>
 
-        <fieldset>
-            <legend>🚗 Parametri Veicolo</legend>
-            <div class="form-group">
-                <label for="vehicleModel">Modello:</label>
-                <select id="vehicleModel">
-                    <option value="vehicle.tesla.model3">Tesla Model 3</option>
-                    <option value="vehicle.audi.etron">Audi e-tron</option>
-                    <option value="vehicle.nissan.patrol">Nissan Patrol</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="vehicleColor">Colore (RGB):</label>
-                <input type="color" id="vehicleColor" value="#ff0000">
-            </div>
-            <div class="form-group">
-                <label for="autopilot">Autopilot Attivo:</label>
-                <select id="autopilot">
-                    <option value="true">Sì</option>
-                    <option value="false">No</option>
-                </select>
-            </div>
-        </fieldset>
+        <form id="configForm" class="form-container">
+            <!-- METEO -->
+            <div class="control-section">
+                <div class="section-header">
+                    <div class="section-icon">🌦️</div>
+                    <div class="section-title">Condizioni Meteo</div>
+                </div>
 
-        <fieldset>
-            <legend>🏙️ Parametri Scenario</legend>
-            <div class="form-group">
-                <label for="town">Mappa:</label>
-                <select id="town">
-                    <option value="Town01">Town01</option>
-                    <option value="Town02">Town02</option>
-                    <option value="Town03">Town03</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="pedestrians">Numero Pedoni:</label>
-                <input type="number" id="pedestrians" min="0" value="10">
-            </div>
-            <div class="form-group">
-                <label for="trafficDensity">Densità Traffico (0-100%):</label>
-                <input type="number" id="trafficDensity" min="0" max="100" value="30">
-            </div>
-        </fieldset>
+                <div class="form-group">
+                    <div class="label-with-value">
+                        <label class="form-label">Nuvolosità</label>
+                        <span id="val-cloudiness" class="value-badge">0%</span>
+                    </div>
+                    <input type="range" id="cloudiness" min="0" max="100" value="0">
+                    <p class="input-description">Controlla la copertura nuvolosa nel cielo della simulazione</p>
+                </div>
 
-        <button type="submit" id="generateBtn">Genera XML Configurazione</button>
-    </form>
+                <div class="form-group">
+                    <div class="label-with-value">
+                        <label class="form-label">Precipitazioni</label>
+                        <span id="val-precipitation" class="value-badge">0%</span>
+                    </div>
+                    <input type="range" id="precipitation" min="0" max="100" value="0">
+                    <p class="input-description">Intensità della pioggia durante la simulazione</p>
+                </div>
 
-    <div id="resultArea" class="hidden">
-        <h3>Risultato XML:</h3>
-        <textarea id="xmlOutput" readonly></textarea>
-        <button id="downloadBtn">Scarica File .xml</button>
-    </div>
+                <div class="form-group">
+                    <div class="label-with-value">
+                        <label class="form-label">Angolo Sole</label>
+                        <span id="val-sunAltitude" class="value-badge">45°</span>
+                    </div>
+                    <input type="range" id="sunAltitude" min="-90" max="90" value="45">
+                    <p class="input-description">Posizione del sole nell'orizzonte (alba, tramonto, mezzogiorno)</p>
+                </div>
 
-    <div id="errorArea" class="hidden">
-        <p id="errorMessage"></p>
-    </div>
+                <input type="hidden" id="windIntensity" value="0">
+            </div>
+
+            <!-- VEICOLO -->
+            <div class="control-section">
+                <div class="section-header">
+                    <div class="section-icon">🚗</div>
+                    <div class="section-title">Configurazione Veicolo</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Modello Veicolo</label>
+                    <select id="vehicleModel">
+                        <option value="vehicle.tesla.model3">Tesla Model 3</option>
+                        <option value="vehicle.audi.etron">Audi e-tron</option>
+                        <option value="vehicle.nissan.patrol">Nissan Patrol</option>
+                    </select>
+                    <p class="input-description">Scegli il modello di auto da utilizzare nella simulazione</p>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Colore Carrozzeria</label>
+                    <input type="color" id="vehicleColor" value="#3498db">
+                    <p class="input-description">Personalizza il colore del veicolo</p>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Modalità Autopilot</label>
+                    <select id="autopilot">
+                        <option value="true">Attivo - Guida Autonoma</option>
+                        <option value="false">Disattivo - Controllo Manuale</option>
+                    </select>
+                    <p class="input-description">Abilita o disabilita il sistema di guida autonoma</p>
+                </div>
+            </div>
+
+            <!-- SCENARIO -->
+            <div class="control-section">
+                <div class="section-header">
+                    <div class="section-icon">🏙️</div>
+                    <div class="section-title">Ambiente e Traffico</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Mappa Città</label>
+                    <select id="town">
+                        <option value="Town01">Town 01 - Città Base</option>
+                        <option value="Town02">Town 02 - Centro Piccolo</option>
+                        <option value="Town03">Town 03 - Area Urbana</option>
+                        <option value="Town04">Town 04 - Autostrada</option>
+                    </select>
+                    <p class="input-description">Seleziona l'ambiente dove eseguire la simulazione</p>
+                </div>
+
+                <div class="form-group">
+                    <div class="label-with-value">
+                        <label class="form-label">Densità Traffico</label>
+                        <span id="val-trafficDensity" class="value-badge">30%</span>
+                    </div>
+                    <input type="range" id="trafficDensity" min="0" max="100" value="30">
+                    <p class="input-description">Numero di veicoli presenti sulle strade</p>
+                </div>
+
+                <input type="hidden" id="pedestrians" value="10">
+            </div>
+        </form>
+
+        <div class="button-container">
+            <button type="submit" form="configForm" id="generateBtn">
+                ⚡ Genera Configurazione XML
+            </button>
+        </div>
+    </aside>
+
+    <!-- PREVIEW AREA -->
+    <main class="preview-area">
+        <div class="preview-toolbar">
+            <div class="toolbar-title">
+                <h2>Output XML</h2>
+                <span>Configurazione Scenario</span>
+            </div>
+            <button id="downloadBtn" class="hidden">
+                ⬇️ Scarica XML
+            </button>
+        </div>
+
+        <div class="editor-container">
+            <!-- EMPTY STATE -->
+            <div id="placeholderState" class="state-view">
+                <div class="empty-state">
+                    <div class="empty-icon">📝</div>
+                    <h3>Inizia la Configurazione</h3>
+                    <p>Imposta i parametri sulla sinistra e<br>premi "Genera Configurazione XML"</p>
+                </div>
+            </div>
+
+            <!-- LOADING STATE -->
+            <div id="loadingArea" class="state-view hidden">
+                <div class="loading-container">
+                    <div class="spinner"></div>
+                    <p class="loading-text">Generazione configurazione in corso...</p>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RESULT STATE -->
+            <div id="resultArea" class="state-view hidden" style="background: transparent;">
+                <textarea id="xmlOutput" readonly spellcheck="false"></textarea>
+            </div>
+
+            <!-- ERROR STATE -->
+            <div id="errorArea" class="state-view hidden">
+                <div class="error-container">
+                    <div class="error-icon">⚠️</div>
+                    <h3>Errore di Generazione</h3>
+                    <p id="errorMessage">Si è verificato un errore durante la generazione del file XML.</p>
+                </div>
+            </div>
+        </div>
+    </main>
 </div>
 
 </body>
