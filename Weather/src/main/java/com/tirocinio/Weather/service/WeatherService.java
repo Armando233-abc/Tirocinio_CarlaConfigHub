@@ -25,38 +25,31 @@ public class WeatherService {
         double rainIntensity = precipitation / 100.0;
         double windSpeed = windIntensity / 100.0;
 
-        // 4. Generazione XML
+        // 4. Generazione XML (solo blocco Weather)
         StringBuilder xml = new StringBuilder();
 
-        xml.append("<GlobalAction>\n");
-        xml.append("  <EnvironmentAction>\n");
-        xml.append("    <Environment>\n");
-        xml.append("      <Weather>\n");
+        xml.append("<Weather>\n");
 
-        xml.append("        <Sun azimuth=\"0\" elevation=\"")
+        xml.append("  <Sun azimuth=\"0\" elevation=\"")
                 .append(sunAltitude)
                 .append("\"/>\n");
 
-        xml.append("        <Precipitation precipitationType=\"rain\" intensity=\"")
+        xml.append("  <Precipitation precipitationType=\"rain\" intensity=\"")
                 .append(rainIntensity)
                 .append("\"/>\n");
 
-        xml.append("        <CloudState cloudState=\"")
+        xml.append("  <CloudState cloudState=\"")
                 .append(cloudState)
                 .append("\"/>\n");
 
-        xml.append("        <Wind direction=\"0\" speed=\"")
+        xml.append("  <Wind direction=\"0\" speed=\"")
                 .append(windSpeed)
                 .append("\"/>\n");
 
-        xml.append("      </Weather>\n");
-        xml.append("    </Environment>\n");
-        xml.append("  </EnvironmentAction>\n");
-        xml.append("</GlobalAction>");
+        xml.append("</Weather>");
 
         return xml.toString();
     }
-
 
     // ---------- Helper ----------
 
@@ -81,9 +74,7 @@ public class WeatherService {
         }
     }
 
-    /**
-     * Mapping percentuale → CloudState OpenSCENARIO
-     */
+
     private String mapCloudState(Double cloudiness) {
         if (cloudiness < 20) return "skyOff";
         if (cloudiness < 50) return "fewClouds";
