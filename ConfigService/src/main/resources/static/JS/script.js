@@ -1,12 +1,40 @@
+// Inizializzazione al caricamento della pagina
+document.addEventListener('DOMContentLoaded', () => {
+    // Configurazione dei slider con aggiornamento valori in tempo reale
+    const sliders = [
+        { id: 'cloudiness', suffix: '%' },
+        { id: 'precipitation', suffix: '%' },
+        { id: 'sunAltitude', suffix: '°' },
+        { id: 'trafficDensity', suffix: '%' }
+    ];
+
+    sliders.forEach(config => {
+        const input = document.getElementById(config.id);
+        const display = document.getElementById(`val-${config.id}`);
+
+        if (input && display) {
+            input.addEventListener('input', (e) => {
+                display.innerText = e.target.value + config.suffix;
+            });
+        }
+    });
+});
+
+// Gestione submit del form
 document.getElementById('configForm').addEventListener('submit', async function(e) {
     e.preventDefault();
 
-    // Reset messaggi precedenti
-    document.getElementById('resultArea').classList.add('hidden');
-    document.getElementById('errorArea').classList.add('hidden');
+    // Riferimenti agli elementi UI
+    const placeholder = document.getElementById('placeholderState');
+    const loadingArea = document.getElementById('loadingArea');
+    const resultArea = document.getElementById('resultArea');
+    const errorArea = document.getElementById('errorArea');
+    const downloadBtn = document.getElementById('downloadBtn');
 
-    // 1. Raccolta Dati e Creazione Struttura JSON
-    // Deve corrispondere alla Map<String, Object> che si aspetta il GatewayService
+    // Mostra stato di caricamento
+    showLoadingState();
+
+    // Preparazione dati per la richiesta
     const requestData = {
         weatherParams: {
             cloudiness: document.getElementById('cloudiness').value,
@@ -27,42 +55,67 @@ document.getElementById('configForm').addEventListener('submit', async function(
     };
 
     try {
-        // 2. Chiamata al Gateway Service
-        // Assicurati che il Gateway sia attivo su localhost:8080
+        // Piccolo ritardo per visualizzare l'animazione di caricamento
+        await new Promise(resolve => setTimeout(resolve, 800));
+
+        // Chiamata API al gateway
         const response = await fetch('http://gateway-service:8080/api/gateway/generate', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(requestData)
         });
 
-        // 3. Gestione Risposta
         if (!response.ok) {
-            // Se c'è un errore (es. validazione fallita o circuit breaker aperto)
-            const errorMsg = await response.text();
-            throw new Error(errorMsg || `Errore HTTP: ${response.status}`);
+            const errorText = await response.text();
+            throw new Error(errorText || "Errore di connessione al Gateway");
         }
 
         const xmlResult = await response.text();
 
-        // Mostra risultato
-        document.getElementById('xmlOutput').value = xmlResult;
-        document.getElementById('resultArea').classList.remove('hidden');
+        // Mostra risultato con successo
+        showResultState(xmlResult);
 
     } catch (error) {
-        // Mostra errore
-        document.getElementById('errorMessage').innerText = "Errore: " + error.message;
-        document.getElementById('errorArea').classList.remove('hidden');
+        // Mostra stato di errore
+        showErrorState(error.message);
+    }
+
+    // Funzioni helper per gestire gli stati UI
+    function showLoadingState() {
+        placeholder.classList.add('hidden');
+        resultArea.classList.add('hidden');
+        errorArea.classList.add('hidden');
+        downloadBtn.classList.add('hidden');
+        loadingArea.classList.remove('hidden');
+    }
+
+    function showResultState(xmlContent) {
+        loadingArea.classList.add('hidden');
+        document.getElementById('xmlOutput').value = xmlContent;
+        resultArea.classList.remove('hidden');
+        downloadBtn.classList.remove('hidden');
+    }
+
+    function showErrorState(errorMessage) {
+        loadingArea.classList.add('hidden');
+        document.getElementById('errorMessage').innerText = "Errore: " + errorMessage;
+        errorArea.classList.remove('hidden');
     }
 });
 
-// Funzione per scaricare il file XML generato
-document.getElementById('downloadBtn').addEventListener('click', function() {
-    const text = document.getElementById('xmlOutput').value;
-    const blob = new Blob([text], { type: "text/xml" });
-    const anchor = document.createElement("a");
-    anchor.href = URL.createObjectURL(blob);
-    anchor.download = "carla_config.xml";
-    anchor.click();
+// Gestione download del file XML
+document.getElementById('downloadBtn').addEventListener('click', () => {
+    const xmlContent = document.getElementById('xmlOutput').value;
+
+    // Creazione blob e download
+    const blob = new Blob([xmlContent], { type: "text/xml" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = "carla_scenario_config.xml";
+    link.click();
+
+    // Pulizia dell'URL temporaneo
+    URL.revokeObjectURL(url);
 });
