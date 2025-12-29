@@ -31,8 +31,12 @@ public class GatewayService {
     }
 
     public String processConfiguration(Map<String, Object> requestData) {
+
+        Object vehicleParams = requestData.get("vehicleParams");
+        validateVehicleParams(vehicleParams);
+
         String weatherXml = callWeatherService(requestData.get("weatherParams"));
-        String vehicleXml = callVehicleService(requestData.get("vehicleParams"));
+        String vehicleXml = callVehicleService(vehicleParams);
         String scenarioXml = callScenarioService(requestData.get("scenarioParams"));
 
 
@@ -43,6 +47,33 @@ public class GatewayService {
 
 
         return callComposerService(fragments);
+    }
+
+    private void validateVehicleParams(Object params) {
+
+        if (params == null) {
+            throw new IllegalArgumentException("vehicleParams è mancante.");
+        }
+
+        if (!(params instanceof Map)) {
+            throw new IllegalArgumentException("vehicleParams deve essere un oggetto JSON (Map).");
+        }
+
+        Map<?, ?> map = (Map<?, ?>) params;
+
+
+        Object model = map.get("model");
+        if (model == null || !(model instanceof String) || ((String) model).isBlank()) {
+            throw new IllegalArgumentException("Parametro 'model' mancante o non valido.");
+        }
+
+
+        Object color = map.get("color");
+        if (color == null || !(color instanceof String) || ((String) color).isBlank()) {
+            throw new IllegalArgumentException("Parametro 'color' mancante o non valido.");
+        }
+
+
     }
 
 
