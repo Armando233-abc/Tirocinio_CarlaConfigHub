@@ -31,14 +31,12 @@ public class ScenarioService {
         xml.append("  <LogicFile filepath=\"").append(town).append("\"/>\n");
         xml.append("</RoadNetwork>\n\n");
 
-        // 2. TRAFFIC ENTITIES (Genera blocchi ScenarioObject per il traffico)
-        // 2. TRAFFIC ENTITIES (Genera blocchi ScenarioObject per il traffico)
+
         for (int i = 0; i < vehicleCount; i++) {
             String name = "Traffic" + i;
             xml.append("<ScenarioObject name=\"").append(name).append("\">\n");
             xml.append("  <Vehicle name=\"vehicle.tesla.model3\" vehicleCategory=\"car\">\n");
 
-            // Ordine XSD: BoundingBox -> Performance -> Axles -> Properties
 
             // 1. BoundingBox
             xml.append("    <BoundingBox>\n");
@@ -49,20 +47,20 @@ public class ScenarioService {
             // 2. Performance
             xml.append("    <Performance maxSpeed=\"50\" maxAcceleration=\"3.0\" maxDeceleration=\"6.0\"/>\n");
 
-            // 3. Axles (UNA SOLA VOLTA)
+            // 3. Axles
             xml.append("    <Axles>\n");
             xml.append("      <FrontAxle maxSteering=\"0.5\" wheelDiameter=\"0.6\" trackWidth=\"1.8\" positionX=\"2.8\" positionZ=\"0.3\"/>\n");
             xml.append("      <RearAxle maxSteering=\"0.0\" wheelDiameter=\"0.6\" trackWidth=\"1.8\" positionX=\"0.0\" positionZ=\"0.3\"/>\n");
             xml.append("    </Axles>\n");
 
-            // 4. Properties (UNA SOLA VOLTA)
+            // 4. Properties
             xml.append("    <Properties/>\n");
 
             xml.append("  </Vehicle>\n");
             xml.append("</ScenarioObject>\n\n");
         }
 
-        // 3. PRIVATE ACTIONS (Init per il traffico)
+        // 3. PRIVATE ACTIONS
         for (int i = 0; i < vehicleCount; i++) {
             String name = "Traffic" + i;
             xml.append("<Private entityRef=\"").append(name).append("\">\n");
@@ -78,7 +76,6 @@ public class ScenarioService {
             xml.append("    </TeleportAction>\n");
             xml.append("  </PrivateAction>\n");
 
-            // Controller Action con Properties (richiesto per validazione XSD se presente Controller)
             xml.append("  <PrivateAction>\n");
             xml.append("    <ControllerAction>\n");
             xml.append("      <AssignControllerAction>\n");

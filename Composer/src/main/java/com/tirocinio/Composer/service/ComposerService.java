@@ -9,15 +9,6 @@ import java.util.regex.Pattern;
 @Service
 public class ComposerService {
 
-    /**
-     * Compone il file OpenSCENARIO finale unendo i frammenti dei microservizi.
-     * Segue rigorosamente l'ordine definito in ScenarioDefinition dell'XSD:
-     * 1. ParameterDeclarations (opzionale)
-     * 2. CatalogLocations
-     * 3. RoadNetwork
-     * 4. Entities
-     * 5. Storyboard
-     */
     public String composeConfiguration(Map<String, String> fragments) {
 
         // 1. Normalizzazione e pulizia frammenti
@@ -25,15 +16,14 @@ public class ComposerService {
         String vehicleFragment  = normalize(fragments.getOrDefault("vehicleFragment", ""));
         String scenarioFragment = normalize(fragments.getOrDefault("scenarioFragment", ""));
 
-        // 2. Estrazione e Fix dei blocchi
-        // NOTA: roadNetwork estratto contiene già i tag <RoadNetwork>, non serve avvolgerlo
+
         String roadNetwork     = extractSection(scenarioFragment, "RoadNetwork");
 
-        // Entità: Ego (da VehicleService) + Traffico (da ScenarioService)
+
         String egoObject       = extractScenarioObject(vehicleFragment);
         String trafficObjects  = extractTrafficObjects(scenarioFragment);
 
-        // Storyboard: Azioni Meteo (Global) + Init (Private)
+
         String weatherAction   = wrapWeatherAsGlobalAction(fixWeather(weatherFragment));
         String egoInit         = fixControllerActions(extractInitPrivate(vehicleFragment));
         String trafficInit     = fixControllerActions(extractInitPrivate(scenarioFragment));
@@ -54,7 +44,7 @@ public class ComposerService {
         xml.append("    <ControllerCatalog><Directory path=\"\"/></ControllerCatalog>\n");
         xml.append("  </CatalogLocations>\n\n");
 
-        // --- ROAD NETWORK (Modificato: rimosso wrapper manuale ridondante) ---
+
         if (!roadNetwork.isEmpty()) {
             xml.append(indent(roadNetwork, 2)).append("\n\n");
         }
@@ -88,7 +78,7 @@ public class ComposerService {
         xml.append("      </Actions>\n");
         xml.append("    </Init>\n");
 
-        // Story fittizia per validazione
+
         xml.append("    <Story name=\"MyStory\">\n");
         xml.append("      <Act name=\"MyAct\">\n");
 
@@ -97,7 +87,7 @@ public class ComposerService {
         xml.append("          <Actors selectTriggeringEntities=\"false\"/>\n");
         xml.append("        </ManeuverGroup>\n");
 
-        // 2. StartTrigger (OBBLIGATORIO PER XSD)
+        // 2. StartTrigger
         xml.append("        <StartTrigger>\n");
         xml.append("          <ConditionGroup>\n");
         xml.append("            <Condition name=\"StartCondition\" delay=\"0\" conditionEdge=\"rising\">\n");
@@ -108,9 +98,9 @@ public class ComposerService {
         xml.append("          </ConditionGroup>\n");
         xml.append("        </StartTrigger>\n");
 
-        // 3. CHIUSURE TAG (Queste mancavano o erano errate)
-        xml.append("      </Act>\n");   // Chiude Act
-        xml.append("    </Story>\n"); // Chiude Story
+
+        xml.append("      </Act>\n");
+        xml.append("    </Story>\n");
 
         xml.append("    <StopTrigger/>\n");
         xml.append("  </Storyboard>\n");
@@ -149,7 +139,6 @@ public class ComposerService {
 
     private String fixWeather(String weatherXml) {
         if (weatherXml.isEmpty()) return "";
-        // Assicura che il blocco weather sia pulito
         return weatherXml.replace("<?xml version=\"1.0\" encoding=\"UTF-8\"?>", "").trim();
     }
 
@@ -160,7 +149,6 @@ public class ComposerService {
                 "    <Environment name=\"Environment1\">\n" +
                 "      <TimeOfDay animation=\"false\" dateTime=\"" + LocalDateTime.now() + "\"/>\n" +
                 "      " + weatherXml + "\n" +
-                // --- CORREZIONE: RoadCondition è obbligatorio in Environment ---
                 "      <RoadCondition frictionScaleFactor=\"1.0\"/>\n" +
                 "    </Environment>\n" +
                 "  </EnvironmentAction>\n" +
@@ -177,7 +165,6 @@ public class ComposerService {
 
     private String fixControllerActions(String xml) {
         if (xml.isEmpty()) return "";
-        // Inserisce i tag Properties se mancanti nel controller per validazione XSD
         if (xml.contains("<Controller>") && !xml.contains("<Properties")) {
             return xml.replace("</Controller>", "  <Properties/>\n</Controller>");
         }
@@ -191,7 +178,6 @@ public class ComposerService {
     }
 
     private String clean(String xml) {
-        // Rimuove linee vuote in eccesso generate dalla composizione
         return xml.replaceAll("(?m)^[ \t]*\r?\n", "");
     }
 }
