@@ -25,28 +25,27 @@ public class WeatherService {
         double rainIntensity = precipitation / 100.0;
         double windSpeed = windIntensity / 100.0;
 
-        // 4. Generazione XML (solo blocco Weather)
+
+        // 4. Generazione XML conforme
         StringBuilder xml = new StringBuilder();
 
-        xml.append("<Weather>\n");
 
-        xml.append("  <Sun azimuth=\"0\" elevation=\"")
+        xml.append("<Weather cloudState=\"").append(cloudState).append("\">\n");
+
+
+        xml.append("  <Sun intensity=\"1.0\" azimuth=\"0.0\" elevation=\"")
                 .append(sunAltitude)
                 .append("\"/>\n");
+
+
+        xml.append("  <Fog visualRange=\"100000.0\"/>\n");
+
 
         xml.append("  <Precipitation precipitationType=\"rain\" intensity=\"")
                 .append(rainIntensity)
                 .append("\"/>\n");
 
-        xml.append("  <CloudState cloudState=\"")
-                .append(cloudState)
-                .append("\"/>\n");
-
-        xml.append("  <Wind direction=\"0\" speed=\"")
-                .append(windSpeed)
-                .append("\"/>\n");
-
-        xml.append("</Weather>");
+        xml.append("</Weather>\n");
 
         return xml.toString();
     }
@@ -55,7 +54,11 @@ public class WeatherService {
 
     private Double parseValue(Object value) {
         if (value == null) return 0.0;
-        return Double.valueOf(value.toString());
+        try {
+            return Double.valueOf(value.toString());
+        } catch (NumberFormatException e) {
+            return 0.0;
+        }
     }
 
     private void validatePercentage(Double value, String paramName) {
@@ -76,9 +79,10 @@ public class WeatherService {
 
 
     private String mapCloudState(Double cloudiness) {
-        if (cloudiness < 20) return "skyOff";
-        if (cloudiness < 50) return "fewClouds";
-        if (cloudiness < 80) return "overcast";
-        return "skyObscured";
+        if (cloudiness < 10) return "skyOff";
+        if (cloudiness < 30) return "free";
+        if (cloudiness < 60) return "cloudy";
+        if (cloudiness < 85) return "overcast";
+        return "rainy";
     }
 }
