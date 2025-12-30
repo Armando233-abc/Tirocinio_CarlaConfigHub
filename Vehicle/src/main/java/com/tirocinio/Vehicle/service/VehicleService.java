@@ -27,22 +27,28 @@ public class VehicleService {
 
         String rgbColor = convertToRgb(color);
 
-        // 3. Generazione XML (solo entità EgoVehicle)
+        // 3. Generazione XML conforme
         StringBuilder xml = new StringBuilder();
 
         xml.append("<ScenarioObject name=\"EgoVehicle\">\n");
         xml.append("  <Vehicle name=\"").append(model).append("\" vehicleCategory=\"car\">\n");
 
-        // Performance
-        xml.append("    <Performance maxSpeed=\"50\" maxAcceleration=\"3.0\" maxDeceleration=\"6.0\"/>\n");
-
-        // BoundingBox
+        // --- 1. BoundingBox
         xml.append("    <BoundingBox>\n");
         xml.append("      <Center x=\"1.5\" y=\"0.0\" z=\"0.9\"/>\n");
         xml.append("      <Dimensions width=\"2.0\" length=\"4.5\" height=\"1.5\"/>\n");
         xml.append("    </BoundingBox>\n");
 
-        // Proprietà (colore)
+        // --- 2. Performance ---
+        xml.append("    <Performance maxSpeed=\"50\" maxAcceleration=\"3.0\" maxDeceleration=\"6.0\"/>\n");
+
+        // --- 3. Axles
+        xml.append("    <Axles>\n");
+        xml.append("      <FrontAxle maxSteering=\"0.5\" wheelDiameter=\"0.6\" trackWidth=\"1.8\" positionX=\"2.8\" positionZ=\"0.3\"/>\n");
+        xml.append("      <RearAxle maxSteering=\"0.0\" wheelDiameter=\"0.6\" trackWidth=\"1.8\" positionX=\"0.0\" positionZ=\"0.3\"/>\n");
+        xml.append("    </Axles>\n");
+
+        // --- 4. Properties
         xml.append("    <Properties>\n");
         xml.append("      <Property name=\"color\" value=\"").append(rgbColor).append("\"/>\n");
         xml.append("    </Properties>\n");
@@ -53,7 +59,7 @@ public class VehicleService {
         return xml.toString();
     }
 
-    // ---------------- Helper ----------------
+    // ---------------- Helper Methods ----------------
 
     private void validateModel(String model) {
         if (model == null || !SUPPORTED_MODELS.contains(model)) {
@@ -69,10 +75,15 @@ public class VehicleService {
 
     private String convertToRgb(String colorInput) {
         if (colorInput.startsWith("#")) {
-            int r = Integer.parseInt(colorInput.substring(1, 3), 16);
-            int g = Integer.parseInt(colorInput.substring(3, 5), 16);
-            int b = Integer.parseInt(colorInput.substring(5, 7), 16);
-            return r + "," + g + "," + b;
+            // Logica semplificata per convertire HEX in formato "R,G,B" se necessario a CARLA
+            try {
+                int r = Integer.parseInt(colorInput.substring(1, 3), 16);
+                int g = Integer.parseInt(colorInput.substring(3, 5), 16);
+                int b = Integer.parseInt(colorInput.substring(5, 7), 16);
+                return r + "," + g + "," + b;
+            } catch (Exception e) {
+                return "255,255,255";
+            }
         }
         return colorInput;
     }
