@@ -10,7 +10,7 @@ RUN ./mvnw dependency:go-offline
 
 COPY src ./src
 
-
+RUN ./mvnw clean package
 
 
 FROM eclipse-temurin:21-jre-jammy
