@@ -16,7 +16,7 @@ services:
 
   # --- Gateway Service (Orchestratore) ---
   gateway-service:
-    build: ./GatewayService # Il nome esatto della tua cartella
+    build: ./GatewayService
     container_name: carla-gateway-service
     ports:
       - "8088:8080"
