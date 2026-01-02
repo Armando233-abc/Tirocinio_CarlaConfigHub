@@ -62,9 +62,14 @@ Il progetto è predisposto per l'avvio rapido tramite **Docker Compose**.
 * [Docker Desktop](https://www.docker.com/products/docker-desktop) installato e in esecuzione.
 
 ### Procedura di Avvio
-1.  **Clona e accedi alla cartella**
+1.  **Clona e accedi alla cartella:**
+   Esegui i comandi per scaricare il progetto e posizionarti nella directory corretta:
+    ```bash
+    git clone https://github.com/TuoUsername/Tirocinio_CarlaConfigHub.git
+    cd Tirocinio_CarlaConfigHub
+    ```
    
-2.  **Avvia i servizi:**
+3.  **Avvia i servizi:**
     Lancia il seguente comando per costruire le immagini e avviare i container.
     ```bash
     docker-compose up --build
