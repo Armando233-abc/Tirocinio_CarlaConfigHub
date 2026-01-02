@@ -1,9 +1,7 @@
-version: '3.8'
-
 services:
   # --- Config Service (Interfaccia) ---
   config-service:
-    build: ./ConfigService  # Il nome esatto della tua cartella
+    build: ./ConfigService
     container_name: carla-config-service
     ports:
       - "8081:8080"
