@@ -59,7 +59,7 @@ document.getElementById('configForm').addEventListener('submit', async function(
         await new Promise(resolve => setTimeout(resolve, 800));
 
         // Chiamata API al gateway
-        const response = await fetch('http://gateway-service:8088/api/gateway/generate', {
+        const response = await fetch('http://gateway-service:8080/api/gateway/generate', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(requestData)
