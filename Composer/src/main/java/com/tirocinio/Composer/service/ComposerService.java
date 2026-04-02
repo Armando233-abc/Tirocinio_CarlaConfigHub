@@ -28,6 +28,12 @@ public class ComposerService {
         String egoInit         = fixControllerActions(extractInitPrivate(vehicleFragment));
         String trafficInit     = fixControllerActions(extractInitPrivate(scenarioFragment));
 
+        // Sotto le dichiarazioni di egoInit e trafficInit
+        if (egoInit.contains("entityRef=\"EgoVehicle\"")) {
+            // Rimuove eventuali inizializzazioni duplicate dell'Ego provenienti dallo ScenarioService
+            trafficInit = trafficInit.replaceAll("(?s)<Private entityRef=\"EgoVehicle\">.*?</Private>", "");
+        }
+
         String maneuvers = extractSection(scenarioFragment, "ManeuverGroup");
 
         // 3. Composizione XML Finale
