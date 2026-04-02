@@ -75,6 +75,17 @@ public class ComposerService {
             xml.append(indent(weatherAction, 8)).append("\n");
         }
 
+        /*
+        * if (!egoInit.isEmpty() && trafficInit.contains("entityRef=\"EgoVehicle\"")) {
+    // Rimuove il blocco duplicato dell'Ego dal traffico usando una regex
+    trafficInit = trafficInit.replaceAll("(?s)<Private entityRef=\"EgoVehicle\">.*?</Private>", "");
+}
+
+// Ora puoi incollarli entrambi con la certezza che siano distinti
+xml.append(indent(egoInit, 8)).append("\n");
+xml.append(indent(trafficInit, 8)).append("\n");
+        * */
+
         // Private Actions (Ego + Traffico)
         if (!egoInit.isEmpty()) {
             xml.append(indent(egoInit, 8)).append("\n");
