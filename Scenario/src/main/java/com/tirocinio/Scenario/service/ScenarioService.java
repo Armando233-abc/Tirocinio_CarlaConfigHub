@@ -82,7 +82,7 @@ public class ScenarioService {
             xml.append("      <SpeedAction>\n");
             xml.append("        <SpeedActionDynamics dynamicsShape=\"step\" value=\"0.0\" dynamicsDimension=\"time\" />\n");
             xml.append("        <SpeedActionTarget>\n");
-            xml.append("          <AbsoluteTargetValue value=\"10.0\" />\n");
+            xml.append("          <AbsoluteTargetSpeed value=\"10.0\" />\n");
             xml.append("        </SpeedActionTarget>\n");
             xml.append("      </SpeedAction>\n");
             xml.append("    </LongitudinalAction>\n");
