@@ -69,8 +69,8 @@ public class ScenarioService {
             xml.append("  <PrivateAction>\n");
             xml.append("    <TeleportAction>\n");
             xml.append("      <Position>\n");
-            xml.append("        <WorldPosition x=\"").append(format(getRandomCoordinate(100, 200)))
-                    .append("\" y=\"").append(format(getRandomCoordinate(100, 200)))
+            xml.append("        <WorldPosition x=\"").append(format((random.nextBoolean()) ? getRandomCoordinate(100, 140) : getRandomCoordinate(160, 200);))
+                    .append("\" y=\"").append(format((random.nextBoolean()) ? getRandomCoordinate(100, 140) : getRandomCoordinate(160, 200);))
                     .append("\" z=\"0.3\" h=\"0.0\" p=\"0.0\" r=\"0.0\"/>\n");
             xml.append("      </Position>\n");
             xml.append("    </TeleportAction>\n");
