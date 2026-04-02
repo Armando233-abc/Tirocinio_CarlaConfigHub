@@ -56,6 +56,37 @@ public class VehicleService {
         xml.append("  </Vehicle>\n");
         xml.append("</ScenarioObject>");
 
+        xml.append("<Private entityRef=\"EgoVehicle\">\n");
+
+        // 1. Posizionamento (Teleport)
+        xml.append("  <PrivateAction>\n");
+        xml.append("    <TeleportAction>\n");
+        xml.append("      <Position>\n");
+        xml.append("        <WorldPosition x=\"150.0\" y=\"150.0\" z=\"0.3\" h=\"0.0\"/>\n");
+        xml.append("      </Position>\n");
+        xml.append("    </TeleportAction>\n");
+        xml.append("  </PrivateAction>\n");
+
+        // 2. Velocità Iniziale (Movimento Longitudinale)
+        xml.append("  <PrivateAction>\n");
+        xml.append("    <LongitudinalAction>\n");
+        xml.append("      <SpeedAction>\n");
+        xml.append("        <SpeedActionDynamics dynamicsShape=\"step\" value=\"0.0\" dynamicsDimension=\"time\"/>\n");
+        xml.append("        <SpeedActionTarget>\n");
+        xml.append("          <AbsoluteTargetValue value=\"10.0\"/>\n"); // Parte a 36 km/h
+        xml.append("        </SpeedActionTarget>\n");
+        xml.append("      </SpeedAction>\n");
+        xml.append("    </LongitudinalAction>\n");
+        xml.append("  </PrivateAction>\n");
+
+        // 3. Attivazione Pilota Automatico (Movimento Laterale/Intelligente)
+        // Senza questo, l'Ego andrebbe dritto ignorando le curve della strada
+        xml.append("  <PrivateAction>\n");
+        xml.append("    <ActivateControllerAction longitudinal=\"true\" lateral=\"true\" />\n");
+        xml.append("  </PrivateAction>\n");
+
+        xml.append("</Private>");
+
         return xml.toString();
     }
 

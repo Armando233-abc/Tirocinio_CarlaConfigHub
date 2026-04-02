@@ -28,6 +28,14 @@ public class ComposerService {
         String egoInit         = fixControllerActions(extractInitPrivate(vehicleFragment));
         String trafficInit     = fixControllerActions(extractInitPrivate(scenarioFragment));
 
+        // Sotto le dichiarazioni di egoInit e trafficInit
+        if (egoInit.contains("entityRef=\"EgoVehicle\"")) {
+            // Rimuove eventuali inizializzazioni duplicate dell'Ego provenienti dallo ScenarioService
+            trafficInit = trafficInit.replaceAll("(?s)<Private entityRef=\"EgoVehicle\">.*?</Private>", "");
+        }
+
+        String maneuvers = extractSection(scenarioFragment, "ManeuverGroup");
+
         // 3. Composizione XML Finale
         StringBuilder xml = new StringBuilder();
 
@@ -67,6 +75,17 @@ public class ComposerService {
             xml.append(indent(weatherAction, 8)).append("\n");
         }
 
+        /*
+        * if (!egoInit.isEmpty() && trafficInit.contains("entityRef=\"EgoVehicle\"")) {
+    // Rimuove il blocco duplicato dell'Ego dal traffico usando una regex
+    trafficInit = trafficInit.replaceAll("(?s)<Private entityRef=\"EgoVehicle\">.*?</Private>", "");
+}
+
+// Ora puoi incollarli entrambi con la certezza che siano distinti
+xml.append(indent(egoInit, 8)).append("\n");
+xml.append(indent(trafficInit, 8)).append("\n");
+        * */
+
         // Private Actions (Ego + Traffico)
         if (!egoInit.isEmpty()) {
             xml.append(indent(egoInit, 8)).append("\n");
@@ -82,10 +101,13 @@ public class ComposerService {
         xml.append("    <Story name=\"MyStory\">\n");
         xml.append("      <Act name=\"MyAct\">\n");
 
-        // 1. ManeuverGroup
-        xml.append("        <ManeuverGroup maximumExecutionCount=\"1\" name=\"ManeuverGroup\">\n");
-        xml.append("          <Actors selectTriggeringEntities=\"false\"/>\n");
-        xml.append("        </ManeuverGroup>\n");
+        if (!maneuvers.isEmpty()) {
+             xml.append(indent(maneuvers, 8)).append("\n");
+        } else {
+            xml.append("        <ManeuverGroup maximumExecutionCount=\"1\" name=\"ManeuverGroup\">\n");
+            xml.append("          <Actors selectTriggeringEntities=\"false\"/>\n");
+            xml.append("        </ManeuverGroup>\n");
+        }
 
         // 2. StartTrigger
         xml.append("        <StartTrigger>\n");
