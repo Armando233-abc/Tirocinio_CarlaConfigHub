@@ -65,7 +65,7 @@ public class ScenarioService {
             String name = "Traffic" + i;
             xml.append("<Private entityRef=\"").append(name).append("\">\n");
 
-            // Teleport Action con WorldPosition completa
+            // --- 1. Teleport Action (Posizionamento) ---
             xml.append("  <PrivateAction>\n");
             xml.append("    <TeleportAction>\n");
             xml.append("      <Position>\n");
@@ -76,22 +76,21 @@ public class ScenarioService {
             xml.append("    </TeleportAction>\n");
             xml.append("  </PrivateAction>\n");
 
+            // --- 2. Longitudinal Action (Movimento iniziale) ---
             xml.append("  <PrivateAction>\n");
-            xml.append("    <ControllerAction>\n");
-            xml.append("      <AssignControllerAction>\n");
-            xml.append("        <Controller name=\"ExternalControl\">\n");
-            xml.append("          <Properties/>\n");
-            xml.append("        </Controller>\n");
-            xml.append("      </AssignControllerAction>\n");
-            xml.append("      <OverrideControllerValueAction>\n");
-            xml.append("        <Throttle value=\"0.0\" active=\"false\"/>\n");
-            xml.append("        <Brake value=\"0.0\" active=\"false\"/>\n");
-            xml.append("        <Clutch value=\"0.0\" active=\"false\"/>\n");
-            xml.append("        <ParkingBrake value=\"0.0\" active=\"false\"/>\n");
-            xml.append("        <SteeringWheel value=\"0.0\" active=\"false\"/>\n");
-            xml.append("        <Gear number=\"1\" active=\"false\"/>\n");
-            xml.append("      </OverrideControllerValueAction>\n");
-            xml.append("    </ControllerAction>\n");
+            xml.append("    <LongitudinalAction>\n");
+            xml.append("      <SpeedAction>\n");
+            xml.append("        <SpeedActionDynamics dynamicsShape=\"step\" value=\"0.0\" dynamicsDimension=\"time\" />\n");
+            xml.append("        <SpeedActionTarget>\n");
+            xml.append("          <AbsoluteTargetValue value=\"10.0\" />\n");
+            xml.append("        </SpeedActionTarget>\n");
+            xml.append("      </SpeedAction>\n");
+            xml.append("    </LongitudinalAction>\n");
+            xml.append("  </PrivateAction>\n");
+
+            // --- 3. Controller Action (Autopilot di CARLA) ---
+            xml.append("  <PrivateAction>\n");
+            xml.append("    <ActivateControllerAction longitudinal=\"true\" lateral=\"true\" />\n");
             xml.append("  </PrivateAction>\n");
 
             xml.append("</Private>\n\n");

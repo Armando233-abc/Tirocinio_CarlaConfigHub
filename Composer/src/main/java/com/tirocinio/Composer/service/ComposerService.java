@@ -28,6 +28,8 @@ public class ComposerService {
         String egoInit         = fixControllerActions(extractInitPrivate(vehicleFragment));
         String trafficInit     = fixControllerActions(extractInitPrivate(scenarioFragment));
 
+        String maneuvers = extractSection(scenarioFragment, "ManeuverGroup");
+
         // 3. Composizione XML Finale
         StringBuilder xml = new StringBuilder();
 
@@ -82,10 +84,13 @@ public class ComposerService {
         xml.append("    <Story name=\"MyStory\">\n");
         xml.append("      <Act name=\"MyAct\">\n");
 
-        // 1. ManeuverGroup
-        xml.append("        <ManeuverGroup maximumExecutionCount=\"1\" name=\"ManeuverGroup\">\n");
-        xml.append("          <Actors selectTriggeringEntities=\"false\"/>\n");
-        xml.append("        </ManeuverGroup>\n");
+        if (!maneuvers.isEmpty()) {
+             xml.append(indent(maneuvers, 8)).append("\n");
+        } else {
+            xml.append("        <ManeuverGroup maximumExecutionCount=\"1\" name=\"ManeuverGroup\">\n");
+            xml.append("          <Actors selectTriggeringEntities=\"false\"/>\n");
+            xml.append("        </ManeuverGroup>\n");
+        }
 
         // 2. StartTrigger
         xml.append("        <StartTrigger>\n");
