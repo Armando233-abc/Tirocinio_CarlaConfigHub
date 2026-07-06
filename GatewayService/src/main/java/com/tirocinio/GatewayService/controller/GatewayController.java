@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Map;
 
 @RestController
@@ -29,24 +28,36 @@ public class GatewayController {
                     "Raccoglie le risposte XML dai microservizi (Weather, Vehicle, Scenario) e le manda al Composer, attende la risposta da quest'ultimo e la manda al microservizio Config."
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Orchestrazione completata con successo. Ritorna i frammenti XML aggregati dal microservizio Composer."),
-            @ApiResponse(responseCode = "503", description = "Servizio Non Disponibile (Circuit Breaker): Uno dei microservizi a valle (Weather, Vehicle, Scenario, Composer) non risponde o è in timeout.",
+            @ApiResponse(responseCode = "200", description = "Orchestrazione completata con successo. Ritorna l'XML finale aggregato dal Composer Service."),
+            @ApiResponse(responseCode = "400", description = "Richiesta non valida: parametri obbligatori mancanti o malformati.",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "503", description = "Servizio Non Disponibile (Circuit Breaker): uno dei microservizi a valle (Weather, Vehicle, Scenario, Composer) non risponde o è in timeout.",
                     content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Errore interno del Gateway durante lo smistamento.",
                     content = @Content(mediaType = "application/json"))
     })
     @PostMapping("/generate")
     public ResponseEntity<?> generateConfiguration(@RequestBody Map<String, Object> requestData) {
+        System.out.println("Gateway: Ricevuta richiesta di generazione config.");
         try {
-            System.out.println("Gateway: Ricevuta richiesta di generazione config.");
-
             String finalXml = gatewayService.processConfiguration(requestData);
-
             return ResponseEntity.ok(finalXml);
 
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
+            // Errore di validazione dei parametri (Fail Fast)
+            return ResponseEntity.badRequest()
+                    .body("Parametri non validi: " + e.getMessage());
+
+        } catch (RuntimeException e) {
+            // Errore proveniente dal fallback del Circuit Breaker
+            // (servizio a valle non raggiungibile o in errore)
             return ResponseEntity.status(503)
-                    .body("Errore durante l'orchestrazione: " + e.getMessage());
+                    .body("Servizio momentaneamente non disponibile: " + e.getMessage());
+
+        } catch (Exception e) {
+            // Qualsiasi altro errore imprevisto
+            return ResponseEntity.status(500)
+                    .body("Errore interno durante l'orchestrazione: " + e.getMessage());
         }
     }
 }
